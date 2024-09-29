@@ -102,5 +102,5 @@ def main():
             st.write("El origen y el destino no pueden ser los mismos.")
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
