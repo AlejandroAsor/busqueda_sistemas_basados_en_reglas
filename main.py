@@ -61,3 +61,46 @@ def get_best_route(graph, orig_node, dest_node):
     else:
         # Si no hay rutas válidas, devolver la ruta más corta sin aplicar las reglas
         return min(all_routes, key=lambda r: prefer_cheaper_routes(r, graph))
+
+
+def main():
+    st.title("Mejor Ruta en el Transporte - Medellín")
+
+    graph = ox.graph_from_place("Medellín, Colombia", network_type='drive')
+
+    col1, col2 = st.columns(2, gap='large')
+
+    with col1:
+        st.write("Introduce las coordenadas de origen:")
+        src_lat = st.number_input("Latitud de origen", value=6.244203, format="%.6f")
+        src_lon = st.number_input("Longitud de origen", value=-75.5812119, format="%.6f")
+
+    with col2:
+        st.write("Introduce las coordenadas de destino:")
+        dest_lat = st.number_input("Latitud de destino", value=6.25184, format="%.6f")
+        dest_lon = st.number_input("Longitud de destino", value=-75.56457, format="%.6f")
+
+    if st.button('Verificar ubicaciones en el mapa'):
+        map_data = pd.DataFrame({'lat': [src_lat, dest_lat], 'lon': [src_lon, dest_lon]})
+        st.map(map_data)
+        st.write("Si las ubicaciones son correctas, procede a obtener la mejor ruta.")
+
+    if st.button('Obtener Mejor Ruta'):
+        if (src_lat, src_lon) != (dest_lat, dest_lon):
+            src_node = ox.distance.nearest_nodes(graph, src_lon, src_lat)
+            dest_node = ox.distance.nearest_nodes(graph, dest_lon, dest_lat)
+
+            shortest_path = get_best_route(graph, src_node, dest_node)
+
+            if shortest_path:
+                fig, ax = ox.plot_graph_route(graph, shortest_path, route_color="r", route_linewidth=3, node_size=0,
+                                              figsize=(15, 15))
+                st.pyplot(fig)
+            else:
+                st.write("No se encontró ninguna ruta posible.")
+        else:
+            st.write("El origen y el destino no pueden ser los mismos.")
+
+
+if _name_ == "_main_":
+    main()
