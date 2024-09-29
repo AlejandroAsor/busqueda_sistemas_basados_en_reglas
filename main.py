@@ -25,7 +25,7 @@ def avoid_peak_hours():
     now = datetime.now()
     if 7 <= now.hour <= 9 or 17 <= now.hour <= 19:
         return True
-    return False
+    return False
 
 def prefer_cheaper_routes(route, graph):
     """Regla: Prefiere rutas más baratas en función del atributo 'cost' de los segmentos."""
@@ -103,4 +103,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main()
